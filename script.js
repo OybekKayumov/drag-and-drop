@@ -104,6 +104,20 @@ function updateDOM() {
   updateSavedColumns();
 }
 
+// show add item input box
+function showInputBox(column) {
+  addBtns[column].style.visibility = 'hidden';
+  saveItemBtns[column].style.display = 'flex';
+  addItemContainers[column].style.display = 'flex';
+}
+
+// hide 
+function hideInputBox(column) {
+  addBtns[column].style.visibility = 'visible';
+  saveItemBtns[column].style.display = 'none';
+  addItemContainers[column].style.display = 'none';
+}
+
 // allow arrays
 function rebuildArrays() {
   backlogListArray = [];
