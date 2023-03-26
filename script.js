@@ -103,6 +103,24 @@ function updateDOM() {
 
 }
 
+// allow arrays
+function rebuildArrays() {
+  for (let i = 0; i < backlogList.children.length; i++) {
+    backlogListArray.push(backlogList.children[i].textContent);    
+  }
+  for (let i = 0; i < progressList.children.length; i++) {
+    progressListArray.push(progressList.children[i].textContent);    
+  }
+  for (let i = 0; i < completeList.children.length; i++) {
+    completeListArray.push(completeList.children[i].textContent);    
+  }
+  for (let i = 0; i < onHoldList.children.length; i++) {
+    onHoldListArray.push(onHoldList.children[i].textContent);    
+  }
+
+  updateDOM();
+}
+
 // drag
 function drag(e) {
   draggedItem = e.target;  
@@ -129,6 +147,7 @@ function drop(e) {
 
   const parent = listColumns[currentColumn];
   parent.appendChild(draggedItem);
+  rebuildArrays();
 }
 
 // on load 
