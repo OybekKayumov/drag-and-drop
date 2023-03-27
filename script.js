@@ -21,6 +21,7 @@ let listArrays = [];
 
 // Drag Functionality
 let draggedItem;
+let dragging = false;
 let currentColumn;
 
 // Get Arrays from localStorage if available, set default values if not
@@ -55,6 +56,13 @@ function updateSavedColumns() {
   // localStorage.setItem('onHoldItems', JSON.stringify(onHoldListArray));
 }
 
+// filter arrays
+function filterArray(array) {
+  const filteredArray = array.filter(item => item !== null);
+
+  return filteredArray;
+}
+
 // Create DOM Elements for each list item
 function createItemEl(columnEl, column, item, index) {
   // console.log('columnEl:', columnEl);
@@ -86,21 +94,28 @@ function updateDOM() {
   backlogListArray.forEach((backlogItem, index) => {
     createItemEl(backlogList, 0, backlogItem, index);
   })
+  backlogListArray = filterArray(backlogListArray);
+  
   // Progress Column
   progressList.textContent = '';
   progressListArray.forEach((progressItem, index) => {
     createItemEl(progressList, 1, progressItem, index);
   })
+  progressListArray = filterArray(progressListArray);
+
   // complete Column
   completeList.textContent = '';
   completeListArray.forEach((completeItem, index) => {
     createItemEl(completeList, 2, completeItem, index);
   })
+  completeListArray = filterArray(completeListArray);
+
   // onHold Column
   onHoldList.textContent = '';
   onHoldListArray.forEach((onHoldItem, index) => {
     createItemEl(onHoldList, 3, onHoldItem, index);
   })
+  onHoldListArray = filterArray(onHoldListArray);
 
   // Run getSavedColumns only once, Update Local Storage
   updatedOnLoad = true;
@@ -110,9 +125,15 @@ function updateDOM() {
 // update item
 function updateItem(id, column) {
   const selectedArray= listArrays[column];
-
   const selectedColumnEl = listColumns[column].children;
-
+  if (!dragging) {    
+    if (!selectedColumnEl[id].textContent) {
+      delete selectedArray[id];
+    } else {
+      selectedArray[id] = selectedColumnEl[id].textContent;
+    }
+    updateDOM();
+  }
 }
 
 // add to column list
@@ -165,6 +186,8 @@ function rebuildArrays() {
 // drag
 function drag(e) {
   draggedItem = e.target;  
+
+  dragging = true;
 }
 
 // column allows 
@@ -188,6 +211,9 @@ function drop(e) {
 
   const parent = listColumns[currentColumn];
   parent.appendChild(draggedItem);
+// dragging complete
+dragging = false;
+
   rebuildArrays();
 }
 
